@@ -304,7 +304,7 @@
 
         try {
             const response = await fetch('/trx/checkout', {
-                method: 'POST',
+                method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ price, hostname, email })
             });
