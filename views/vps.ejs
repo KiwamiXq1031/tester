@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ibzz-Official</title>
+    <link href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #3f37c9;
+            --dark: #2b2d42;
+            --light: #f8f9fa;
+            --gray: #adb5bd;
+            --gray-dark: #495057;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --info: #560bad;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7ff;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .section {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .section-header .number {
+            background-color: var(--primary);
+            color: white;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: 600;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .section-header .title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--gray-dark);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--gray);
+            background-color: white;
+            color: var(--dark);
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .top-up-instant {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .top-up-instant .item {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+        }
+
+        .top-up-instant .item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            border-color: var(--primary-light);
+        }
+
+        .top-up-instant .item.selected {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.03);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.1);
+        }
+
+        .top-up-instant .item .selected-icon {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: var(--primary);
+            font-size: 1.5rem;
+            display: none;
+        }
+
+        .top-up-instant .item.selected .selected-icon {
+            display: block;
+        }
+
+        .top-up-instant .item .name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .top-up-instant .item .details {
+            font-size: 0.9rem;
+            color: var(--gray-dark);
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .top-up-instant .item .price {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .checkout-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 2rem;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+            display: none;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+        }
+
+        .checkout-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+            
+            .top-up-instant {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .section:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .checkout-btn {
+            animation: fadeIn 0.5s ease forwards;
+            animation-delay: 0.2s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="section">
+            <div class="section-header">
+                <div class="number">1</div>
+                <div class="title">Select Your Package</div>
+            </div>
+
+            <div class="top-up-instant">
+                <% products.forEach(function(product) { %>
+                    <div class="item" data-id="<%= product.id %>" data-size="<%= product.size %>" data-image="<%= product.image %>" data-price="<%= product.price %>" onclick="selectPlan(this)">
+                        <i class="uil uil-check-circle selected-icon"></i>
+                        <div class="name"><%= product.name %> Package</div>
+                        <div class="details">
+                            <strong>Size:</strong> <%= product.size %><br>
+                            <strong>Image:</strong> <%= product.image %><br>
+                            <strong>Region:</strong> <%= product.region %>
+                        </div>
+                        <div class="price">Rp. <%= product.price.toLocaleString() %></div>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <div class="number">2</div>
+                <div class="title">Enter Your Information</div>
+            </div>
+            <div class="input-group">
+                <label for="hostname">Hostname</label>
+                <input type="text" id="hostname" placeholder="Enter your hostname" required>
+            </div>
+            <div class="input-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+            </div>
+        </div>
+
+        <button class="checkout-btn" id="checkoutBtn" onclick="initiateCheckout()">
+            Proceed to Checkout
+        </button>
+    </div>
+
+<script>
+    let selectedPlan = null;
+
+    function selectPlan(element) {
+        selectedPlan = element;
+        const items = document.querySelectorAll('.top-up-instant .item');
+        items.forEach(item => item.classList.remove('selected'));
+        element.classList.add('selected');
+        document.getElementById('checkoutBtn').style.display = 'block';
+    }
+
+    async function initiateCheckout() {
+        if (!selectedPlan) return;
+        const price = selectedPlan.dataset.price;
+        const hostname = document.getElementById('hostname').value.trim();
+        const email = document.getElementById('email').value.trim();
+
+        if (!hostname || !email) {
+            Swal.fire('Error!', 'Please fill in all required fields.', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch('/trx/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ price, hostname, email })
+            });
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                Swal.fire('Failed!', data.error, 'error');
+                return;
+            }
+
+            if (data.transactionId) {
+                window.location.href = `/trx/invoice/${data.transactionId}`;
+            } else {
+                Swal.fire('Failed!', 'An error occurred during checkout.', 'error');
+            }
+        } catch (error) {
+            Swal.fire('Error!', 'An error occurred while processing your request.', 'error');
+        }
+    }
+</script>
+</body>
+</html>
