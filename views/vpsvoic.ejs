@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Pembayaran | Ibzz Official</title>
+    <link href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.2/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --primary-light: #a29bfe;
+            --secondary: #fd79a8;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+            --gray: #dfe6e9;
+            --gray-dark: #636e72;
+            --success: #00b894;
+            --danger: #d63031;
+            --warning: #fdcb6e;
+            --info: #0984e3;
+            --glass: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .checkout-container {
+            max-width: 800px;
+            width: 100%;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            background: var(--glass);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .checkout-header {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .checkout-header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            background: linear-gradient(to right, #fff, var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .checkout-body {
+            padding: 2rem;
+        }
+        
+        .checkout-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .checkout-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .checkout-section h3 {
+            margin: 0 0 1.5rem 0;
+            color: white;
+            font-size: 1.25rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkout-section h3 i {
+            margin-right: 10px;
+            color: var(--primary-light);
+        }
+        
+        .price-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .price-info:last-child {
+            border-bottom: none;
+        }
+        
+        .total-payment {
+            font-weight: 600;
+            color: white;
+            font-size: 1.2rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .status-section {
+            margin: 1.5rem 0;
+        }
+        
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            align-items: center;
+        }
+        
+        .status-row:last-child {
+            border-bottom: none;
+        }
+        
+        .status-label {
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+        }
+        
+        .status-label i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .status-value {
+            font-weight: 500;
+            color: white;
+        }
+        
+        .status-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .status-badge i {
+            margin-right: 5px;
+        }
+        
+        .pending {
+            background: rgba(253, 203, 110, 0.2);
+            color: var(--warning);
+            border: 1px solid rgba(253, 203, 110, 0.3);
+        }
+        
+        .succeeded {
+            background: rgba(0, 184, 148, 0.2);
+            color: var(--success);
+            border: 1px solid rgba(0, 184, 148, 0.3);
+        }
+        
+        .failed {
+            background: rgba(214, 48, 49, 0.2);
+            color: var(--danger);
+            border: 1px solid rgba(214, 48, 49, 0.3);
+        }
+        
+        .qr-container {
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+        }
+        
+        .qr-image {
+            width: 220px;
+            height: 220px;
+            border-radius: 12px;
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .qr-image:hover {
+            transform: scale(1.05);
+        }
+        
+        .qr-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .qr-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .qr-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .countdown {
+            font-weight: 600;
+            color: var(--warning);
+            font-size: 1rem;
+        }
+        
+        .payment-guide {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .payment-guide h3 {
+            margin: 0 0 1rem 0;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+        
+        .payment-guide h3 i {
+            margin-right: 10px;
+            color: var(--primary-light);
+        }
+        
+        .payment-guide ol {
+            padding-left: 1.5rem;
+            margin: 0;
+        }
+        
+        .payment-guide li {
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .payment-guide li:last-child {
+            margin-bottom: 0;
+        }
+        
+        .success-animation {
+            display: none;
+            text-align: center;
+            margin: 2rem 0;
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .success-icon {
+            font-size: 6rem;
+            color: var(--success);
+            margin-bottom: 1.5rem;
+            animation: bounce 1.5s ease infinite, pulse 2s ease infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .success-animation h3 {
+            font-size: 1.5rem;
+            margin: 0 0 0.5rem 0;
+            color: white;
+        }
+        
+        .success-animation p {
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0;
+        }
+        
+        .invoice-id {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: white;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .checkout-container {
+                border-radius: 16px;
+            }
+            
+            .checkout-body {
+                padding: 1.5rem;
+            }
+            
+            .checkout-section {
+                padding: 1.25rem;
+            }
+            
+            .qr-image {
+                width: 180px;
+                height: 180px;
+            }
+            
+            .qr-actions {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .qr-btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="checkout-container">
+        <div class="checkout-header">
+            <h1>Invoice Pembayaran</h1>
+            <div class="invoice-id">#<%= transaction.id %></div>
+        </div>
+        
+        <div class="checkout-body">
+            <div class="checkout-section">
+                <h3><i class="uil uil-receipt"></i> Detail Pembayaran</h3>
+                <div class="price-info">
+                    <span>Harga Paket</span>
+                    <span>Rp. <%= transaction.originalAmount.toLocaleString() %></span>
+                </div>
+                <div class="price-info">
+                    <span>Biaya Admin</span>
+                    <span>Rp. <%= transaction.adminFee.toLocaleString() %></span>
+                </div>
+                <div class="price-info total-payment">
+                    <span>Total Pembayaran</span>
+                    <span>Rp. <%= transaction.amount.toLocaleString() %></span>
+                </div>
+            </div>
+
+            <div class="checkout-section">
+                <h3><i class="uil uil-info-circle"></i> Informasi Transaksi</h3>
+                <div class="status-section">
+                    <div class="status-row">
+                        <span class="status-label"><i class="uil uil-credit-card"></i> Metode Pembayaran</span>
+                        <span class="status-value">QRIS</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label"><i class="uil uil-calendar-alt"></i> Tanggal Transaksi</span>
+                        <span class="status-value"><%= new Date(transaction.createdAt).toLocaleDateString('id-ID', { 
+                            day: 'numeric', 
+                            month: 'long', 
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        }) %></span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label"><i class="uil uil-check-circle"></i> Status Transaksi</span>
+                        <span class="status-badge <%= transaction.status %>">
+                            <i class="uil <%= transaction.status === 'succeeded' ? 'uil-check-circle' : transaction.status === 'failed' ? 'uil-times-circle' : 'uil-clock' %>"></i>
+                            <%= transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1) %>
+                        </span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label"><i class="uil uil-bill"></i> Status Pembayaran</span>
+                        <span class="status-badge <%= transaction.status === 'succeeded' ? 'succeeded' : 'pending' %>">
+                            <i class="uil <%= transaction.status === 'succeeded' ? 'uil-check-circle' : 'uil-clock' %>"></i>
+                            <%= transaction.status === 'succeeded' ? 'Lunas' : 'Menunggu Pembayaran' %>
+                        </span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label"><i class="uil uil-hourglass"></i> Batas Waktu</span>
+                        <span id="countdown" class="status-value countdown"></span>
+                    </div>
+                </div>
+
+                <div class="qr-container" id="qrSection">
+                    <h3>Scan QR Code untuk Pembayaran</h3>
+                    <img id="qrImage" class="qr-image" src="<%= transaction.qrImageUrl %>" alt="QR Code">
+                    <div class="qr-actions">
+                        <button id="printButton" class="qr-btn">
+                            <i class="uil uil-print"></i> Cetak
+                        </button>
+                        <a id="downloadButton" download="QRCode_<%= transaction.id %>.png" class="qr-btn">
+                            <i class="uil uil-import"></i> Unduh QR
+                        </a>
+                    </div>
+                </div>
+
+                <div class="success-animation" id="successAnimation">
+                    <div class="success-icon">
+                        <i class="uil uil-check-circle"></i>
+                    </div>
+                    <h3>Pembayaran Berhasil!</h3>
+                    <p>VPS Anda sedang diproses dan akan segera aktif.</p>
+                </div>
+
+                <div class="payment-guide">
+                    <h3><i class="uil uil-book-open"></i> Panduan Pembayaran</h3>
+                    <ol>
+                        <li>Buka aplikasi mobile banking atau e-wallet yang mendukung QRIS</li>
+                        <li>Pilih menu scan QR Code</li>
+                        <li>Arahkan kamera ke QR Code di atas</li>
+                        <li>Konfirmasi jumlah pembayaran dan selesaikan transaksi</li>
+                        <li>Tunggu hingga status berubah menjadi "Lunas" secara otomatis</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="expiredSound">
+        <source src="/assets/audio/expired.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- JavaScript remains exactly the same -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Transaction data from EJS
+        const transaction = {
+            id: '<%= transaction.id %>',
+            status: '<%= transaction.status %>',
+            expirationTime: new Date("<%= transaction.expirationTime %>").getTime(),
+            email: '<%= transaction.email %>',
+            hostname: '<%= transaction.hostname %>',
+            size: '<%= transaction.size %>',
+            image: '<%= transaction.image %>',
+            region: '<%= transaction.region %>',
+            createdAt: '<%= transaction.createdAt %>'
+        };
+
+        // DOM Elements
+        const countdownElement = document.getElementById('countdown');
+        const qrSection = document.getElementById('qrSection');
+        const qrImage = document.getElementById('qrImage');
+        const successAnimation = document.getElementById('successAnimation');
+        const expiredSound = document.getElementById('expiredSound');
+        const statusElement = document.querySelector('.status-badge.' + transaction.status);
+        const paymentStatusElement = document.querySelector('.status-row:nth-child(4) .status-badge');
+        const printButton = document.getElementById('printButton');
+        const downloadButton = document.getElementById('downloadButton');
+
+        // Set download button href
+        downloadButton.href = qrImage.src;
+
+        // Countdown timer
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const timeLeft = transaction.expirationTime - now;
+
+            if (timeLeft <= 0) {
+                countdownElement.textContent = 'Waktu habis';
+                qrImage.style.display = 'none';
+                statusElement.textContent = 'Failed';
+                statusElement.className = 'status-badge failed';
+                statusElement.innerHTML = '<i class="uil uil-times-circle"></i> Failed';
+                paymentStatusElement.textContent = 'Gagal';
+                paymentStatusElement.className = 'status-badge failed';
+                paymentStatusElement.innerHTML = '<i class="uil uil-times-circle"></i> Gagal';
+                
+                if (expiredSound) {
+                    expiredSound.play().catch(e => console.log('Autoplay prevented:', e));
+                }
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Waktu Pembayaran Habis',
+                    text: 'Silakan buat transaksi baru untuk melanjutkan.',
+                    confirmButtonText: 'Mengerti'
+                });
+                
+                clearInterval(countdownInterval);
+                return;
+            }
+
+            const minutes = Math.floor(timeLeft / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            countdownElement.textContent = `${minutes} menit ${seconds} detik`;
+        }
+
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown(); // Initial call
+
+        // Print button
+        printButton.addEventListener('click', () => {
+            window.print();
+        });
+
+        // Payment status checker
+        async function checkPaymentStatus() {
+            try {
+                const response = await axios.get(`/api/check-status/${transaction.id}`);
+                
+                if (response.data.error) {
+                    console.error('Error checking status:', response.data.error);
+                    return;
+                }
+
+                const newStatus = response.data.status;
+                
+                if (newStatus !== transaction.status) {
+                    transaction.status = newStatus;
+                    
+                    // Update UI
+                    statusElement.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+                    statusElement.className = 'status-badge ' + newStatus;
+                    statusElement.innerHTML = `<i class="uil ${newStatus === 'succeeded' ? 'uil-check-circle' : newStatus === 'failed' ? 'uil-times-circle' : 'uil-clock'}"></i> ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}`;
+                    
+                    if (newStatus === 'succeeded') {
+                        paymentStatusElement.textContent = 'Lunas';
+                        paymentStatusElement.className = 'status-badge succeeded';
+                        paymentStatusElement.innerHTML = '<i class="uil uil-check-circle"></i> Lunas';
+                        qrSection.style.display = 'none';
+                        successAnimation.style.display = 'block';
+                        
+                        // Show success notification
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Pembayaran Berhasil!',
+                            text: 'VPS Anda sedang diproses.',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+
+                        // Create VPS
+                        try {
+                            const createResponse = await axios.get('/api/create-vps', {
+                                params: {
+                                    email: transaction.email,
+                                    hostname: transaction.hostname,
+                                    size: transaction.size,
+                                    image: transaction.image,
+                                    region: transaction.region
+                                }
+                            });
+
+                            if (createResponse.data.message) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'VPS Berhasil Dibuat',
+                                    text: createResponse.data.message,
+                                    confirmButtonText: 'Mengerti'
+                                });
+                            } else if (createResponse.data.error) {
+                                throw new Error(createResponse.data.error);
+                            }
+                        } catch (error) {
+                            console.error('Error creating VPS:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal Membuat VPS',
+                                text: error.message || 'Terjadi kesalahan saat membuat VPS.',
+                                confirmButtonText: 'Mengerti'
+                            });
+                        }
+
+                        clearInterval(pollingInterval);
+                    } else if (newStatus === 'failed') {
+                        paymentStatusElement.textContent = 'Gagal';
+                        paymentStatusElement.className = 'status-badge failed';
+                        paymentStatusElement.innerHTML = '<i class="uil uil-times-circle"></i> Gagal';
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Pembayaran Gagal',
+                            text: 'Silakan coba lagi atau hubungi dukungan pelanggan.',
+                            confirmButtonText: 'Mengerti'
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking payment status:', error);
+            }
+        }
+
+        // Only start polling if payment is not yet succeeded
+        if (transaction.status !== 'succeeded') {
+            const pollingInterval = setInterval(checkPaymentStatus, 10000); // Check every 10 seconds
+            checkPaymentStatus(); // Initial check
+        } else {
+            qrSection.style.display = 'none';
+            successAnimation.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
